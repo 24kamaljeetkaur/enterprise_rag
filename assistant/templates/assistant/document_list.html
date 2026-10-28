@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Documents | Enterprise RAG</title>
+</head>
+<body>
+    <h1>Enterprise RAG - Document Management</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <p>
+        <a href="{% url 'upload_pdf' %}">Upload New PDF</a> |
+        <a href="{% url 'chat' %}">Open Chat</a>
+    </p>
+
+    {% if documents %}
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>PDF Name</th>
+                    <th>Status</th>
+                    <th>Chunks</th>
+                    <th>Uploaded</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for document in documents %}
+                    <tr>
+                        <td>{{ document.title }}</td>
+                        <td>{{ document.status }}</td>
+                        <td>{{ document.chunk_count }}</td>
+                        <td>{{ document.uploaded_at|date:"d M Y H:i" }}</td>
+
+                        <td>
+                            <form
+                                method="post"
+                                action="{% url 'reindex_pdf' document.pk %}"
+                                style="display:inline"
+                            >
+                                {% csrf_token %}
+                                <button type="submit">
+                                    Re-index
+                                </button>
+                            </form>
+
+                            <form
+                                method="post"
+                                action="{% url 'delete_pdf' document.pk %}"
+                                style="display:inline"
+                                onsubmit="return confirm('Delete this PDF and its indexed chunks?');"
+                            >
+                                {% csrf_token %}
+                                <button type="submit">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No PDFs uploaded yet.</p>
+    {% endif %}
+</body>
+</html>

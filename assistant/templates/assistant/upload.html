@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF | Enterprise RAG</title>
+</head>
+<body>
+    <h1>Enterprise RAG - Upload PDF</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="pdf_file">Select PDF:</label>
+        <input
+            type="file"
+            id="pdf_file"
+            name="pdf_file"
+            accept=".pdf,application/pdf"
+            required
+        >
+
+        <button type="submit">Upload and Index</button>
+    </form>
+
+    <p><a href="{% url 'document_list' %}">Manage Documents</a></p>
+    <p><a href="{% url 'chat' %}">Open RAG Chat</a></p>
+</body>
+</html>

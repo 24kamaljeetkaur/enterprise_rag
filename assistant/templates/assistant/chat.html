@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise RAG Chat</title>
+</head>
+<body>
+    <h1>Enterprise RAG Knowledge Assistant</h1>
+
+    <p>
+        <a href="{% url 'upload_pdf' %}">Upload PDF</a> |
+        <a href="{% url 'document_list' %}">Manage Documents</a>
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="question">Ask a question about your PDFs:</label>
+        <br>
+
+        <textarea
+            id="question"
+            name="question"
+            rows="4"
+            cols="60"
+            required
+        >{{ question }}</textarea>
+
+        <br>
+        <button type="submit">Ask AI</button>
+    </form>
+
+    {% if answer %}
+        <h2>AI Answer</h2>
+        <div style="white-space: pre-wrap;">{{ answer }}</div>
+    {% endif %}
+
+    <hr>
+
+    <h2>Recent Chat History</h2>
+
+    {% if history %}
+        {% for item in history %}
+            <section>
+                <p><strong>Question:</strong> {{ item.question }}</p>
+                <p><strong>Answer:</strong></p>
+                <div style="white-space: pre-wrap;">{{ item.answer }}</div>
+                <small>{{ item.created_at|date:"d M Y H:i" }}</small>
+                <hr>
+            </section>
+        {% endfor %}
+    {% else %}
+        <p>No chat history yet.</p>
+    {% endif %}
+</body>
+</html>
